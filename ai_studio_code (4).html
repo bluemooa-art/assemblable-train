@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASSEMBLE TRAIN | 미래형 거주시설 예약 시스템</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --assemble-blue: #2F6BFF; --glass: rgba(255, 255, 255, 0.7); }
+        body { font-family: 'Inter', 'Pretendard', sans-serif; background: #000; color: #1d1d1f; overflow-x: hidden; }
+        
+        /* 애니메이션 배경: 눈 내리는 효과 */
+        .snow-bg {
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), 
+                        url('https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover; background-position: center; background-attachment: fixed;
+        }
+
+        /* 유리 효과 */
+        .glass { background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        
+        /* 페이지 전환 */
+        .page { display: none; opacity: 0; transform: translateY(20px); transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+        .page.active { display: block; opacity: 1; transform: translateY(0); }
+
+        /* 버튼 및 카드 */
+        .btn-primary { background: var(--assemble-blue); color: white; border-radius: 30px; transition: 0.3s; transform: scale(1); }
+        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(47, 107, 255, 0.4); }
+        .card-select { cursor: pointer; border: 2px solid transparent; transition: 0.3s; border-radius: 24px; }
+        .card-select.active { border-color: var(--assemble-blue); background: white; transform: scale(1.02); }
+        
+        /* 항공권 스타일 */
+        .ticket-cut { position: relative; border-right: 2px dashed #cbd5e1; }
+        .ticket-cut::before, .ticket-cut::after { content: ''; position: absolute; right: -10px; width: 20px; height: 20px; background: #f1f5f9; border-radius: 50%; }
+        .ticket-cut::before { top: -10px; } .ticket-cut::after { bottom: -10px; }
+
+        /* 스크롤바 감추기 */
+        ::-webkit-scrollbar { width: 0px; }
+    </style>
+</head>
+<body class="snow-bg min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- [1] 로그인 섹션 -->
+    <div id="login-page" class="page active w-full max-w-md">
+        <div class="glass p-10 rounded-[40px] shadow-2xl text-center">
+            <h1 class="text-3xl font-black tracking-tighter mb-2">🚄 ASSEMBLE TRAIN</h1>
+            <p class="text-gray-500 text-sm mb-10">지속 가능한 인류의 새로운 거점</p>
+            <div class="space-y-4">
+                <input type="text" placeholder="아이디" class="w-full p-4 rounded-2xl border-none bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                <input type="password" placeholder="비밀번호" class="w-full p-4 rounded-2xl border-none bg-white focus:ring-2 focus:ring-blue-500 outline-none">
+                <button onclick="showPage('main-page')" class="btn-primary w-full py-4 font-bold text-lg">로그인</button>
+            </div>
+            <div class="mt-6 flex justify-center space-x-4 text-xs text-gray-400 font-medium">
+                <a href="#">회원가입</a><span>|</span><a href="#">아이디 찾기</a><span>|</span><a href="#">비밀번호 찾기</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- [2] 메인 섹션 -->
+    <div id="main-page" class="page w-full max-w-5xl text-center">
+        <h2 class="text-white text-6xl font-black mb-6 leading-tight">기후 위기 속,<br><span class="text-blue-400">새로운 삶의 궤도</span></h2>
+        <p class="text-white/70 text-xl mb-12 font-light">어셈블 열차는 인류의 생존과 기술의 진보를 연결합니다.</p>
+        <div class="flex flex-col md:flex-row gap-6 justify-center">
+            <button onclick="showPage('reserve-page')" class="btn-primary px-12 py-5 text-xl font-bold">지금 예약하기</button>
+            <button onclick="showPage('intro-page')" class="glass px-12 py-5 text-xl font-bold rounded-[30px] hover:bg-white/90">열차 시설 둘러보기</button>
+        </div>
+    </div>
+
+    <!-- [3] 열차 소개 (아코디언 형태) -->
+    <div id="intro-page" class="page w-full max-w-4xl">
+        <div class="glass p-10 rounded-[40px]">
+            <h3 class="text-3xl font-bold mb-8">열차 시설 안내</h3>
+            <div class="space-y-4">
+                <details class="group bg-white/50 rounded-3xl p-6 transition-all">
+                    <summary class="list-none flex justify-between items-center cursor-pointer font-bold text-lg">🏠 주거 섹션 (Living Zone) <span class="transition-transform group-open:rotate-180">↓</span></summary>
+                    <p class="mt-4 text-gray-600 leading-relaxed text-sm">개인 침실과 공동 휴게공간이 조화된 주거 특화 구역입니다. AI 비서가 실내 온습도 및 생활 일정을 완벽히 관리합니다.</p>
+                </details>
+                <details class="group bg-white/50 rounded-3xl p-6">
+                    <summary class="list-none flex justify-between items-center cursor-pointer font-bold text-lg">🔬 연구 섹션 (Research Center) <span>↓</span></summary>
+                    <p class="mt-4 text-gray-600 text-sm">최첨단 실험 장비와 데이터 서버가 구비된 연구원 전용 공간입니다. 24시간 에너지 센터와 직접 연결되어 안정적인 데이터 처리가 가능합니다.</p>
+                </details>
+                <details class="group bg-white/50 rounded-3xl p-6">
+                    <summary class="list-none flex justify-between items-center cursor-pointer font-bold text-lg">🌱 자급자족 시스템 (Smart Farm & Eco) <span>↓</span></summary>
+                    <p class="mt-4 text-gray-600 text-sm">수경 재배 스마트팜과 생태공원이 결합되어 산소와 식량을 생산합니다. 승객은 언제든 자연 속에서 산책을 즐길 수 있습니다.</p>
+                </details>
+            </div>
+            <button onclick="showPage('main-page')" class="mt-10 text-gray-400 font-bold">← 돌아가기</button>
+        </div>
+    </div>
+
+    <!-- [4] 예약 섹션 (핵심 로직) -->
+    <div id="reserve-page" class="page w-full max-w-6xl">
+        <div class="glass p-8 md:p-12 rounded-[50px] shadow-2xl flex flex-col lg:flex-row gap-12">
+            
+            <!-- 왼쪽: 정보 입력 -->
+            <div class="flex-1 space-y-12">
+                <section>
+                    <h4 class="text-2xl font-black mb-6">1. 예약자 정보</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <select id="userType" class="p-4 rounded-2xl bg-white border-none focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option value="일반 승객">○ 일반 승객</option>
+                            <option value="연구원">○ 연구원</option>
+                        </select>
+                        <input id="userName" type="text" placeholder="이름" class="p-4 rounded-2xl bg-white border-none outline-none">
+                        <input id="userPhone" type="text" placeholder="연락처" class="p-4 rounded-2xl bg-white border-none outline-none">
+                        <input id="userEmail" type="text" placeholder="이메일" class="p-4 rounded-2xl bg-white border-none outline-none">
+                        <input id="userCount" type="number" placeholder="인원" value="1" min="1" class="p-4 rounded-2xl bg-white border-none outline-none" oninput="updatePrice()">
+                    </div>
+                </section>
+
+                <section>
+                    <h4 class="text-2xl font-black mb-6">2. 일정 및 기간</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input id="startDate" type="date" class="p-4 rounded-2xl bg-white border-none outline-none">
+                        <select id="duration" class="p-4 rounded-2xl bg-white border-none outline-none" onchange="updatePrice()">
+                            <option value="3">3개월 (기본)</option>
+                            <option value="6">6개월</option>
+                            <option value="12">1년</option>
+                            <option value="36">3년</option>
+                            <option value="60">5년 이상</option>
+                        </select>
+                    </div>
+                </section>
+
+                <section>
+                    <h4 class="text-2xl font-black mb-6">3. 객실 선택</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="card-select p-6 bg-white/40" onclick="selectCabin(this, 'Standard')">
+                            <h4 class="text-xl font-bold">🏠 주거칸</h4>
+                            <p class="text-xs text-gray-500 mt-1">안락한 표준 생활 공간</p>
+                        </div>
+                        <div class="card-select p-6 bg-white/40" onclick="selectCabin(this, 'Research')">
+                            <h4 class="text-xl font-bold">🔬 연구형 주거칸</h4>
+                            <p class="text-xs text-gray-500 mt-1">연구실 및 데이터센터 연결</p>
+                        </div>
+                    </div>
+                    <!-- 객실 상세 리스트 (JS로 채워짐) -->
+                    <div id="roomDetail" class="hidden mt-6 p-6 rounded-[30px] bg-white shadow-inner animate-fade-in"></div>
+                </section>
+
+                <section>
+                    <h4 class="text-2xl font-black mb-6">4. 부가 서비스 (20종)</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 overflow-y-auto max-h-48 p-2">
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 스마트팜</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 의료센터</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 생태공원</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 심리상담</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 맞춤식단</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 피트니스</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 도서관</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 교육프로그램</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 자원순환투어</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> AI 체험</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 기관실 견학</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 어린이 프로그램</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 세탁 서비스</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 개인창고</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> VR 체험</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 천체 관측</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 연구시설 견학</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 수영장</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 카페</label>
+                        <label class="flex items-center text-xs bg-white/50 p-3 rounded-xl cursor-pointer hover:bg-white"><input type="checkbox" class="mr-2" onchange="updatePrice()"> 라운지</label>
+                    </div>
+                </section>
+            </div>
+
+            <!-- 오른쪽: 고정 결제창 -->
+            <div class="lg:w-80 bg-white/80 p-8 rounded-[40px] shadow-xl h-fit sticky top-10 flex flex-col items-center">
+                <h4 class="font-bold text-gray-400 text-sm mb-2 uppercase">Estimate Total</h4>
+                <div id="totalPriceDisplay" class="text-4xl font-black text-blue-600 mb-8">₩ 0</div>
+                <button onclick="finalizeBooking()" class="btn-primary w-full py-5 text-xl font-bold mb-4">예약 확정</button>
+                <p class="text-[10px] text-gray-400 text-center">장기 거주 시 10% 추가 할인이 적용됩니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- [5] 예약 완료 확인 & QR 티켓 -->
+    <div id="confirm-page" class="page w-full max-w-2xl">
+        <div class="glass p-1 rounded-[45px] overflow-hidden shadow-2xl">
+            <!-- 티켓 상단 -->
+            <div class="bg-blue-600 p-8 text-white flex justify-between items-end">
+                <div>
+                    <p class="text-xs opacity-70 uppercase tracking-widest">Assemble Train</p>
+                    <h2 class="text-3xl font-black">BOARDING PASS</h2>
+                </div>
+                <div class="text-right">
+                    <p class="text-xs opacity-70">Booking No.</p>
+                    <p id="ticketNo" class="font-mono font-bold">ASM-2035-XXXX</p>
+                </div>
+            </div>
+
+            <!-- 티켓 내용 -->
+            <div class="bg-white p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="md:col-span-2 space-y-6">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase">Passenger</p>
+                            <p id="tName" class="font-bold text-lg">-</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase">Cabin Class</p>
+                            <p id="tCabin" class="font-bold text-lg">-</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase">Boarding Date</p>
+                            <p id="tDate" class="font-bold text-lg">-</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase">Seat</p>
+                            <p class="font-bold text-lg text-blue-600">A-302</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-[10px] text-gray-400 uppercase">Selected Services</p>
+                        <p id="tService" class="text-xs font-medium text-gray-600 mt-1">-</p>
+                    </div>
+                </div>
+
+                <!-- QR 코드 및 사이드 -->
+                <div class="ticket-cut flex flex-col items-center justify-center pl-4">
+                    <div class="w-32 h-32 bg-gray-100 rounded-2xl flex items-center justify-center mb-2 border-2 border-dashed border-gray-300">
+                        <!-- 가짜 QR 이미지 -->
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ASM-2035-RESERVED" alt="QR" class="w-24 h-24">
+                    </div>
+                    <p class="text-[9px] text-gray-400">SCAN FOR GATE OPEN</p>
+                </div>
+            </div>
+
+            <!-- 하단 바 -->
+            <div class="bg-gray-50 p-6 flex justify-between items-center">
+                <p id="tTotal" class="font-black text-xl text-blue-600">₩ 0</p>
+                <button onclick="showPage('main-page')" class="text-sm font-bold text-gray-400 hover:text-gray-900 transition-colors">BACK TO HOME</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedCabinType = "";
+        let basePrice = 0;
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            setTimeout(() => {
+                document.getElementById(pageId).classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 50);
+        }
+
+        function selectCabin(element, type) {
+            document.querySelectorAll('.card-select').forEach(c => c.classList.remove('active'));
+            element.classList.add('active');
+            selectedCabinType = (type === 'Standard') ? "주거칸" : "연구형 주거칸";
+            basePrice = (type === 'Standard') ? 3000000 : 5000000;
+            
+            const detailDiv = document.getElementById("roomDetail");
+            detailDiv.classList.remove("hidden");
+            
+            if(type === 'Standard') {
+                detailDiv.innerHTML = `
+                    <h5 class="font-bold text-blue-600 mb-4">🏠 주거칸 포함 사항</h5>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <span>✔ 개인침실</span> <span>✔ 개인욕실</span>
+                        <span>✔ AI비서</span> <span>✔ 공동식당</span>
+                        <span>✔ 생태공원</span> <span>✔ 스마트팜 견학</span>
+                        <span>✔ 세탁실</span> <span>✔ 휴게실</span>
+                    </div>
+                `;
+            } else {
+                detailDiv.innerHTML = `
+                    <h5 class="font-bold text-blue-600 mb-4">🔬 연구형 주거칸 포함 사항</h5>
+                    <div class="grid grid-cols-2 gap-2 text-sm">
+                        <span>✔ 독립 연구실</span> <span>✔ 개인침실</span>
+                        <span>✔ 실험실</span> <span>✔ AI 연구지원</span>
+                        <span>✔ 데이터센터</span> <span>✔ 연구회의실</span>
+                        <span>✔ 연구장비</span> <span>✔ 의료실 이용</span>
+                    </div>
+                `;
+            }
+            updatePrice();
+        }
+
+        function updatePrice() {
+            const months = parseInt(document.getElementById("duration").value);
+            const people = parseInt(document.getElementById("userCount").value || 1);
+            const addOns = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            
+            if (basePrice === 0) return;
+
+            // 가격 계산 로직 (기본료 * 개월수 * 인원 + 부가서비스*10만원)
+            let total = (basePrice * months * people) + (addOns * 100000);
+            
+            // 장기 할인 (12개월 이상 10%)
+            if(months >= 12) total *= 0.9;
+
+            document.getElementById("totalPriceDisplay").innerText = "₩ " + total.toLocaleString();
+            return total;
+        }
+
+        function finalizeBooking() {
+            const name = document.getElementById("userName").value;
+            if(!name || !selectedCabinType) {
+                alert("이름과 객실을 선택해주세요.");
+                return;
+            }
+
+            // 티켓 데이터 매핑
+            document.getElementById("tName").innerText = name + " (" + document.getElementById("userType").value + ")";
+            document.getElementById("tCabin").innerText = selectedCabinType;
+            document.getElementById("tDate").innerText = document.getElementById("startDate").value || "2035-08-15";
+            document.getElementById("tTotal").innerText = document.getElementById("totalPriceDisplay").innerText;
+            
+            // 체크된 부가서비스 나열
+            const checkedServices = Array.from(document.querySelectorAll('input[type="checkbox"]:checked'))
+                                         .map(el => el.parentElement.innerText.trim());
+            document.getElementById("tService").innerText = checkedServices.join(", ") || "선택된 부가서비스 없음";
+
+            // 예약번호 랜덤 생성
+            document.getElementById("ticketNo").innerText = "ASM-2035-" + Math.floor(1000 + Math.random() * 9000);
+
+            showPage('confirm-page');
+        }
+    </script>
+</body>
+</html>
